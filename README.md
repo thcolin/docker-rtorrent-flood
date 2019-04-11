@@ -37,7 +37,8 @@ Run this container with tty mode enabled. In your `docker-compose.yml`, add `tty
 - Use **$RTORRENT_VER-$LIBTORRENT_VER** to get specific versions of rTorrent/libtorrent.
 
 #### Volumes
-- **/torrents** : your downloaded torrents folder
-- **/session** : your session folder
 - **/watch** : your .torrent watched folder
+- **/incoming** : your downloading torrents folder
+- **/completed** : your downloaded torrents folder
+- **/session** : your session folder
 - **/flood-db** : Flood databases folder

@@ -4,7 +4,7 @@ encoding_list = UTF-8
 port_range = 49184-49184
 port_random = no
 check_hash = no
-directory = /torrents
+directory = /incoming
 session = /session
 encryption = allow_incoming, try_outgoing, enable_retry
 trackers.use_udp.set = yes
@@ -19,10 +19,17 @@ max_uploads = 15
 
 network.xmlrpc.size_limit.set = 10000000
 
+# Watch /watch/*.torrent, add them and delete them
 schedule = watch_directory,1,1,"load.start=/watch/*.torrent"
 schedule = untied_directory,5,5,"stop_untied=/watch/*.torrent"
+
 schedule = scgi_permission,0,0,"execute.nothrow=chmod,\"g+w,o=\",/tmp/rtorrent.sock"
 schedule = insufficient_disk_space,1,30,close_low_diskspace=500M
 
-method.set_key=event.download.finished,unrar,"execute={/usr/local/bin/rtunrar.sh,$d.base_path=}"
 method.set_key=event.download.inserted_new,loaded_time,"d.custom.set=addtime,$cat=$system.time=;d.save_full_session="
+
+# Move completed downloads to /completed
+method.insert = d.get_finished_dir, simple, "cat=/completed/,$d.custom1="
+method.insert = d.get_data_full_path, simple, "branch=((d.is_multi_file)),((cat,(d.directory))),((cat,(d.directory),/,(d.name)))"
+method.insert = d.move_to_complete, simple, "execute=mkdir,-p,$argument.1=; execute=cp,-rp,$argument.0=,$argument.1=; d.stop=; d.directory.set=$argument.1=; d.start=;d.save_full_session=; execute=rm, -r, $argument.0="
+method.set_key = event.download.finished,move_complete,"d.move_to_complete=$d.get_data_full_path=,$d.get_finished_dir="
