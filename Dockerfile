@@ -79,7 +79,7 @@ COPY rootfs /
 RUN chmod +x /usr/local/bin/* /etc/s6.d/*/* /etc/s6.d/.s6-svscan/* \
  && cd /usr/flood/ && npm run build
 
-VOLUME /data /flood-db
+VOLUME /session /torrents /watch /flood-db
 
 EXPOSE 3000 49184 49184/udp
 
