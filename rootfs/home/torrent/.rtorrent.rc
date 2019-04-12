@@ -8,7 +8,8 @@ directory = /incoming
 session = /session
 encryption = allow_incoming, try_outgoing, enable_retry
 trackers.use_udp.set = yes
-dht.mode.set = off
+dht = auto
+dht_port = 6881
 protocol.pex.set = no
 
 min_peers = 1
